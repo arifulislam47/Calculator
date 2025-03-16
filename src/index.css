@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+/* Google Fonts import */
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,opsz,wght@0,100..900,0,8..144,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+/* Bai Jamjuree CSS classes */
+.bai-jamjuree-extralight {
+  font-family: "Bai Jamjuree", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+/* Nunito CSS class */
+.nunito {
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Additional custom styles if needed */
+:root {
+  font-family: 'Bai Jamjuree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #000;
+  color: #fff;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+/* Remove default button styles that conflict with Tailwind */
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* Calculator and Currency component button styles */
+.calculator-buttons button,
+.currency-buttons button {
+  height: 60px;
+  width: 60px;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Bai Jamjuree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  font-weight: 300 !important;
+  transition: opacity 0.2s;
+}
+
+.calculator-buttons button:active,
+.currency-buttons button:active {
+  opacity: 0.7;
+}
+
+/* Zero button styling */
+.zero-btn {
+  grid-column: span 2;
+  width: 130px !important;
+  justify-content: flex-start !important;
+  padding-left: 24px !important;
+  border-radius: 30px !important;
+}
+
+/* Currency swap button specific styling */
+.currency-swap-btn {
+  background-color: #ff9f0a !important;
+  color: white !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+/* Operator buttons */
+.calculator-buttons button:nth-child(4n),
+.currency-buttons button:nth-child(4n) {
+  font-weight: 500 !important;
+}
+
+/* Gray buttons */
+.calculator-buttons button:nth-child(-n+3),
+.currency-buttons button:nth-child(-n+3) {
+  font-weight: normal !important;
+  font-size: 1.25rem !important;
+}
+
+/* Compact calculator */
+.calculator-buttons,
+.currency-buttons {
+  gap: 10px !important;
+  padding: 10px !important;
+}
+
+/* Reduce result font size */
+.text-6xl {
+  font-size: 2.5rem !important;
+}
+
+/* Make app fit in viewport */
+.w-full.max-w-md.mx-auto.p-4 {
+  padding: 10px !important;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+}
