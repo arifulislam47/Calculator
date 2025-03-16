@@ -1,17 +1,71 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Calculator() {
   const [display, setDisplay] = useState('0');
-  const [operation, setOperation] = useState(null);
   const [prevValue, setPrevValue] = useState(null);
+  const [operation, setOperation] = useState(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
 
-  const clearAll = () => {
-    setDisplay('0');
-    setOperation(null);
-    setPrevValue(null);
-    setWaitingForOperand(false);
-  };
+  // Add keyboard event listener
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Numeric keys (including numpad)
+      if (/^\d$/.test(event.key) || (event.keyCode >= 96 && event.keyCode <= 105)) {
+        event.preventDefault();
+        const digit = event.keyCode >= 96 && event.keyCode <= 105 
+          ? String(event.keyCode - 96) // Convert numpad keyCode to digit
+          : event.key;
+        handleDigit(parseInt(digit, 10));
+      }
+      
+      // Operators
+      else if (event.key === '+') {
+        event.preventDefault();
+        handleOperator('+');
+      }
+      else if (event.key === '-') {
+        event.preventDefault();
+        handleOperator('-');
+      }
+      else if (event.key === '*' || event.key === 'x') {
+        event.preventDefault();
+        handleOperator('×');
+      }
+      else if (event.key === '/') {
+        event.preventDefault();
+        handleOperator('÷');
+      }
+      
+      // Equals
+      else if (event.key === '=' || event.key === 'Enter') {
+        event.preventDefault();
+        handleEquals();
+      }
+      
+      // Decimal point
+      else if (event.key === '.' || event.key === ',') {
+        event.preventDefault();
+        handleDot();
+      }
+      
+      // Backspace
+      else if (event.key === 'Backspace') {
+        event.preventDefault();
+        handleBackspace();
+      }
+      
+      // Clear (Escape key)
+      else if (event.key === 'Escape') {
+        event.preventDefault();
+        clearAll();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [display, prevValue, operation, waitingForOperand]); // Include all dependencies
 
   const handleDigit = (digit) => {
     if (waitingForOperand) {
@@ -37,36 +91,66 @@ export default function Calculator() {
     if (prevValue === null) {
       setPrevValue(inputValue);
     } else if (operation) {
-      const result = performOperation(prevValue, inputValue, operation);
-      setDisplay(String(result));
+      const result = performCalculation();
       setPrevValue(result);
+      setDisplay(String(result));
     }
 
     setWaitingForOperand(true);
     setOperation(nextOperator);
   };
 
-  const performOperation = (x, y, op) => {
-    switch (op) {
-      case '+': return x + y;
-      case '-': return x - y;
-      case '×': return x * y;
-      case '÷': return x / y;
-      case '%': return x % y;
-      default: return y;
+  const handleBackspace = () => {
+    if (waitingForOperand) return;
+    
+    if (display.length === 1 || (display.length === 2 && display.startsWith('-'))) {
+      setDisplay('0');
+    } else {
+      setDisplay(display.substring(0, display.length - 1));
     }
   };
 
   const handleEquals = () => {
-    if (prevValue === null || operation === null) return;
+    if (prevValue === null || operation === null) {
+      return;
+    }
 
-    const inputValue = parseFloat(display);
-    const result = performOperation(prevValue, inputValue, operation);
-    
+    const result = performCalculation();
     setDisplay(String(result));
     setPrevValue(null);
     setOperation(null);
     setWaitingForOperand(true);
+  };
+
+  const clearAll = () => {
+    setDisplay('0');
+    setPrevValue(null);
+    setOperation(null);
+    setWaitingForOperand(false);
+  };
+
+  const performCalculation = () => {
+    const inputValue = parseFloat(display);
+    let result;
+
+    switch (operation) {
+      case '+':
+        result = prevValue + inputValue;
+        break;
+      case '-':
+        result = prevValue - inputValue;
+        break;
+      case '×':
+        result = prevValue * inputValue;
+        break;
+      case '÷':
+        result = prevValue / inputValue;
+        break;
+      default:
+        return inputValue;
+    }
+
+    return parseFloat(result.toFixed(8));
   };
 
   const handlePlusMinus = () => {
@@ -149,6 +233,9 @@ export default function Calculator() {
           </button>
           <button onClick={handleDot} className="bg-[#333333] text-white text-3xl rounded-full">
             .
+          </button>
+          <button onClick={handleBackspace} className="bg-[#333333] text-white text-2xl rounded-full">
+            ←
           </button>
           <button onClick={handleEquals} className="bg-[#ff9f0a] text-white text-3xl rounded-full">
             =

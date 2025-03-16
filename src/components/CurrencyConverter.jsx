@@ -59,6 +59,59 @@ export default function CurrencyConverter() {
     }
   }, [amount, exchangeRate]);
 
+  // Add keyboard event listener for currency converter
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Only process keyboard events when on the currency page
+      if (window.location.pathname !== '/currency') return;
+      
+      // Numeric keys (including numpad)
+      if (/^\d$/.test(event.key) || (event.keyCode >= 96 && event.keyCode <= 105)) {
+        event.preventDefault();
+        const digit = event.keyCode >= 96 && event.keyCode <= 105 
+          ? String(event.keyCode - 96) // Convert numpad keyCode to digit
+          : event.key;
+        handleDigit(parseInt(digit, 10));
+      }
+      
+      // Decimal point
+      else if (event.key === '.' || event.key === ',') {
+        event.preventDefault();
+        handleDot();
+      }
+      
+      // Backspace - clear last digit
+      else if (event.key === 'Backspace') {
+        event.preventDefault();
+        if (displayValue.length === 1) {
+          setDisplayValue('0');
+          setAmount('0');
+        } else {
+          const newValue = displayValue.substring(0, displayValue.length - 1);
+          setDisplayValue(newValue);
+          setAmount(newValue);
+        }
+      }
+      
+      // Clear (Escape key)
+      else if (event.key === 'Escape') {
+        event.preventDefault();
+        clearAll();
+      }
+      
+      // Plus/Minus with the numpad +/- keys
+      else if (event.key === '+' || event.key === '-') {
+        event.preventDefault();
+        handlePlusMinus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [displayValue, waitingForOperand]);
+
   const handleDigit = (digit) => {
     if (waitingForOperand) {
       setDisplayValue(String(digit));
